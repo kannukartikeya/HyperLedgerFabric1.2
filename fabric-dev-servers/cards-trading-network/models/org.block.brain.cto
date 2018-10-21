@@ -1,0 +1,71 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Write your model definitions here
+ */
+
+//https://medium.freecodecamp.org/how-to-build-a-blockchain-network-using-hyperledger-fabric-and-composer-e06644ff801d
+namespace org.block.brain
+
+/**
+ * The asset participants will be trading.
+ * Each card has certain properties such as name,
+ * description, and type which can
+ * be used for the frontend application
+ */
+asset TradingCard identified by cardId {
+  o String cardId
+  o String cardName
+  o String cardDescription
+  o GameType cardType default="Baseball" // If no value is provided, it takes the default value
+  o Boolean forTrade
+  --> Trader owner
+}
+
+/**
+ * Enumerated types are used to specify a type
+ * which can have 1 or N possible values, and nothing else.
+ */
+enum GameType {
+  o Baseball
+  o Football
+  o Cricket
+}
+
+/**
+ * The participant model for a Trader
+ */
+participant Trader identified by traderId {
+  o String traderId
+  o String traderName
+}
+
+/**
+ * A transaction which allows Traders to buy other
+ * Traders' cards if they're available for trade
+ */
+transaction TradeCard {
+  --> TradingCard card
+  --> Trader newOwner
+}
+
+/**
+ * A notification event to be emitted whenever
+ * any card is traded
+ */
+event TradeNotification {
+  --> TradingCard card
+}
+
